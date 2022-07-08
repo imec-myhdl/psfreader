@@ -237,6 +237,8 @@ class PSF_Variable:
         type_id = psffile.read_uint32()
         self.type = psffile.types[type_id]
         self.prop = PSF_Property.read_dictionary(psffile)
+        if not self.prop:
+            self.prop = self.type.prop
 
         return True
 
