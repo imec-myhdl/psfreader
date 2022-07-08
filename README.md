@@ -58,7 +58,7 @@ Heavily borrowed from Ikuo Kobori's python psfreader. Extended to allow for more
 
 ## Debugging Hints:
 
-Cadence supplies a (largely ondocumented) utility (named 'psf') that can convert PSFformatted files to human readable format. 
+Cadence(TM) supplies a (largely ondocumented) utility (named 'psf') that can convert PSFformatted files to human readable format. 
 It does give you a clue what the binary format looks like. PSF files are divided in sections:
 
 - HEADER (sectionid = 0): generic simulation info
