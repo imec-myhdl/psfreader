@@ -7,26 +7,38 @@ This library is licensed under LGPL version 3 or later.
 ## required
 - Numpy
 
+## Install
+    python3 -m pip install git+https://github.com/imec-myhdl/psfreader.git
+
+## Uninstall
+    python3 -m pip uninstall psfreader
+    
+## Upgrade
+    python3 -m pip install --upgrade git+https://github.com/imec-myhdl/psfreader.git
+
 ## usage
-            
-    p = PSFReader(filename)
-    h = p.get_header()
-    design = h['design']
-    simulation = h['analysis description']
+    import psfreader
+    
+    p = PSFReader('filename')
+    h = p.get_header() # PSF-properties
+    design = h['design'] # note: this generally is the first line of your netlist
+    description = h['analysis description']
+    
+    # get x 
     sweep = p.get_sweep()       
     sweep_parameter_name = sweep.name
-
     x = sweep.val
     nb_of_points = len(x) # should be equal to h['PSF sweep points']
 
+    # get y (
     signals= p.get_signals()
     sig = signals['vdd']
-    signal_name = sig.name
-    signal_value = sig.val
-    signal_psftype = sig.type
-    signal_dtype = sig.val.dtype
-    signal_properties = sig.prop
-
+    y = sig.val
+    signal_name = sig.name # should be 'vdd' in this case :)
+    signal_psftype = sig.type # internal PSF type
+    signal_dtype = sig.val.dtype # numpy dtype
+    signal_properties = sig.prop # usually empty
+    ...
 
 
 ## Resources
