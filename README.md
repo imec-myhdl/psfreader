@@ -37,7 +37,7 @@ This library is licensed under LGPL version 3 or later.
     signal_name = sig.name # should be 'vdd' in this case :)
     signal_psftype = sig.type # internal PSF type
     signal_dtype = sig.val.dtype # numpy dtype
-    signal_properties = sig.prop # usually empty
+    signal_properties = sig.prop # when empty in psf file (most of the time) this is a link to sig.type.prop
     ...
 
 
