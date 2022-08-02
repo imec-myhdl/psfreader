@@ -17,7 +17,7 @@ This library is licensed under LGPL version 3 or later.
     python3 -m pip install --upgrade git+https://github.com/imec-myhdl/psfreader.git
 
 ## usage
-    import psfreader
+    from psfreader import PSFReader
     
     p = PSFReader('filename')
     h = p.get_header() # PSF-properties
