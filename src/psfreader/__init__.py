@@ -5,7 +5,7 @@ import numpy as np
 from collections import OrderedDict
 
 from psfreader.psfdata import TypeId, ChunkId, ElementId, \
-                              SectionId, SectionInfo, \
+                              SectionId, SectionInfo, PropertyTypeId, \
                               PSF_Property, PSF_Type, PSF_Variable, PSF_Group  
 
 class PSFReaderError(ValueError):
@@ -36,6 +36,17 @@ class PSFFile:
         if b != b'Clarissa':
             raise PSFReaderError('This file is not a PSF format.')
         self.fp.seek(0, io.SEEK_SET)
+        self.read_single_type = { TypeId.STRING         : self.read_str,
+                                  TypeId.INT8           : self.read_int32,
+                                  TypeId.INT32          : self.read_int32,
+                                  TypeId.FLOAT          : self.read_float,
+                                  TypeId.COMPLEX_FLOAT  : self.read_complex_float,
+                                  TypeId.DOUBLE         : self.read_double,
+                                  TypeId.COMPLEX_DOUBLE : self.read_complex_double,
+                                  PropertyTypeId.STRING : self.read_str,
+                                  PropertyTypeId.INT    : self.read_int32,
+                                  PropertyTypeId.DOUBLE : self.read_double }
+            
  
     def close(self):
         self.fp.close()
@@ -95,6 +106,8 @@ class PSFFile:
         data = self.fp.read(length)
         self.fp.read(extras)
         return data.decode()
+
+        
 
     # =============================================================================
     # read in (structured) numpy array row(s)
@@ -241,6 +254,12 @@ class PSFFile:
 
     def read_section_VALUE(self):
         endsub = self.read_chunk_preamble(ChunkId.MAJOR_SECTION) 
+        c_id = self.read_uint32()
+        if c_id == ChunkId.MINOR_SECTION:
+            endsub = self.read_uint32()
+        else:
+            self.unread()
+
         if len(self.sweep_vars) == 0: # no sweep specified
             # only variables,
             while self.fp.tell() < endsub:

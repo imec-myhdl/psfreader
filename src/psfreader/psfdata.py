@@ -56,11 +56,18 @@ class PropertyTypeId(IntEnum):
     STRING = 0x21
     INT    = 0x22
     DOUBLE = 0x23
+    
+PropertyTypeId.members = set([item.value for item in PropertyTypeId])
+    
 
 
 class ElementId(IntEnum):
     DATA    = 0x10
     GROUP   = 0x11
+    # hash-table for faster access
+    # structure = INDEX, SIZE (both int32) 
+    # Not needed, python has own (efficient) implementation: dict()
+    # HASH   = 0x13 
     ZEROPAD = 0x14
 
 
@@ -86,20 +93,13 @@ class PSF_Property:
         return 'PSF_Property(name: ' + str(self.name) + ', value: ' + str(self.value) + ')'
 
     def read(self, psffile):
+        '''read property (returns True when successful'''
         p_type = psffile.read_uint32()
         self.type = p_type
 
-        if p_type == PropertyTypeId.STRING:
+        if p_type in PropertyTypeId.members:
             self.name = psffile.read_str()
-            self.value = psffile.read_str()
-            return True
-        elif p_type == PropertyTypeId.INT:
-            self.name = psffile.read_str()
-            self.value = psffile.read_int32()
-            return True
-        elif p_type == PropertyTypeId.DOUBLE:
-            self.name = psffile.read_str()
-            self.value = psffile.read_double()
+            self.value = psffile.read_single_type[p_type]() # mapped function
             return True
         else:
             # raise ValueError('Unexpected Property type number: ' + str(p_type))
