@@ -17,7 +17,7 @@ This library is licensed under LGPL version 3 or later.
     python3 -m pip install --upgrade git+https://github.com/imec-myhdl/psfreader.git
 
 ## usage
-    import psfreader
+    from psfreader import PSFReader
     
     p = PSFReader('filename')
     h = p.get_header() # PSF-properties
@@ -30,14 +30,14 @@ This library is licensed under LGPL version 3 or later.
     x = sweep.val
     nb_of_points = len(x) # should be equal to h['PSF sweep points']
 
-    # get y (
+    # get y 
     signals= p.get_signals()
     sig = signals['vdd']
     y = sig.val
     signal_name = sig.name # should be 'vdd' in this case :)
     signal_psftype = sig.type # internal PSF type
     signal_dtype = sig.val.dtype # numpy dtype
-    signal_properties = sig.prop # usually empty
+    signal_properties = sig.prop # when empty in psf file (most of the time) this is a link to sig.type.prop
     ...
 
 
