@@ -352,32 +352,36 @@ class PSFReader:
     def __init__(self, filename, header_only=False):
         self.psf = PSFFile(filename)
         self.psf.read_file(header_only=header_only)
+        self.get_signals() 
 
     def get_header(self):
         '''Return a dictionary of properties'''
         return {key: self.psf.properties[key] for key in self.psf.properties}
 
     def get_signals(self):
-        '''Return a list of signal names in this file'''
-        signals = None
-        if len(self.psf.sweep_vars) == 0: # no sweep specified
-            signals = self.psf.variables
-        else:
-            signals = self.psf.traces
-            if signals:
-                first_elem = next(iter(signals.values()))
-                if isinstance(first_elem, PSF_Group):
-                    signals = OrderedDict([(t.name, t) for t in  first_elem.vars])
-        return signals
+        '''Return a dictionary with signals'''
+        if not hasattr(self, 'signals'):
+            signals = None
+            if len(self.psf.sweep_vars) == 0: # no sweep specified
+                signals = self.psf.variables
+            else:
+                signals = self.psf.traces
+                if signals:
+                    first_elem = next(iter(signals.values()))
+                    if isinstance(first_elem, PSF_Group):
+                        signals = OrderedDict([(t.name, t) for t in  first_elem.vars])
+            self.signals = signals
+        return self.signals
+
+    def get_signal(self, name):
+        '''Retrieve signal[name]'''
+        if not hasattr(self, 'signals'):
+            self.get_signals()
+        return self.signals[name]
 
     def get_sweep(self):
         '''Return the value of the sweep variable'''
         return self.psf.sweep_vars[0] if len(self.psf.sweep_vars) ==1 else None
 
 
-    def get_signal(self, name):
-        '''Return the signal value and sweep value(scalar or vector)'''
-        signals = self.get_signals()
-        return signals[name] if name in signals else None
- 
 
