@@ -31,8 +31,7 @@ This library is licensed under LGPL version 3 or later.
     nb_of_points = len(x) # should be equal to h['PSF sweep points']
 
     # get y 
-    signals= p.get_signals()
-    sig = signals['vdd']
+    sig = p.signals['vdd']
     y = sig.val
     signal_name = sig.name # should be 'vdd' in this case :)
     signal_psftype = sig.type # internal PSF type
