@@ -300,6 +300,17 @@ class PSF_Variable:
     def flatten_value(self, a, arrays):
         arrays[self.name] = a
         return [(self, a)]
+    
+    def split(self):
+        '''return tuple (name, val, units)'''
+        name = self.name
+        val = self.val
+        units = ''
+        try:
+            units = self.prop['units']
+        except:
+            pass
+        return name, val, units
 
 class PSF_Group:
     def __init__(self):
